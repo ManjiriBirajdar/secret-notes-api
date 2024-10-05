@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { SecretNotesService } from './secret-notes.service';
 import { CreateSecretNoteDto } from './dto/create-secret-note.dto';
 import { UpdateSecretNoteDto } from './dto/update-secret-note.dto';
+import { SecretNote } from './schemas/secret-note.schema';
 
 @Controller('secret-notes')
 export class SecretNotesController {
@@ -18,17 +19,17 @@ export class SecretNotesController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.secretNotesService.findOne(+id);
+  findOne(@Param('id') id: string): Promise<SecretNote> {
+    return this.secretNotesService.findOne(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateSecretNoteDto: UpdateSecretNoteDto) {
-    return this.secretNotesService.update(+id, updateSecretNoteDto);
+    return this.secretNotesService.update(id, updateSecretNoteDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.secretNotesService.remove(+id);
+    return this.secretNotesService.delete(id);
   }
 }

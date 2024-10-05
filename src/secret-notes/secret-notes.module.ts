@@ -1,9 +1,12 @@
 import { Module } from '@nestjs/common';
+import { MongooseModule } from '@nestjs/mongoose';
 import { SecretNotesService } from './secret-notes.service';
 import { SecretNotesController } from './secret-notes.controller';
+import { SecretNote, SecretNoteSchema } from './schemas/secret-note.schema';
 
 @Module({
+  imports: [MongooseModule.forFeature([{ name: SecretNote.name, schema: SecretNoteSchema }])],
   controllers: [SecretNotesController],
-  providers: [SecretNotesService]
+  providers: [SecretNotesService],
 })
 export class SecretNotesModule {}
