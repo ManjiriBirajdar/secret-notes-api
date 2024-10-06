@@ -9,9 +9,6 @@ export class SecretNote {
   note: string;
 
   @Prop({ required: true })
-  id: string;
-
-  @Prop({ required: true })
   creationDate: Date;
 }
 

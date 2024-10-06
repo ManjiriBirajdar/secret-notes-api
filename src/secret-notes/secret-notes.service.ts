@@ -1,53 +1,75 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateSecretNoteDto } from './dto/create-secret-note.dto';
 import { SecretNote } from './schemas/secret-note.schema';
 import { UpdateSecretNoteDto } from './dto/update-secret-note.dto';
+import { EncryptionService } from 'src/encryption/encryption.service';
 
 @Injectable()
 export class SecretNotesService {
-  constructor(@InjectModel(SecretNote.name) private readonly secretNoteModel: Model<SecretNote>) {}
+  constructor(
+    @InjectModel(SecretNote.name) private readonly secretNoteModel: Model<SecretNote>, // Inject SecretNote model
+    private readonly encryptionService: EncryptionService // Inject EncryptionService
+  ) { }
 
   async create(createSecretNoteDto: CreateSecretNoteDto): Promise<SecretNote> {
-    const createdSecretNote = await this.secretNoteModel.create(createSecretNoteDto);
+    // Encrypt the note before saving it
+    const encryptedNote = this.encryptionService.encrypt(createSecretNoteDto.note);
+
+    // Create a new SecretNote document with the encrypted note
+    const createdSecretNote = await this.secretNoteModel.create({
+      ...createSecretNoteDto,
+      note: encryptedNote, // Store the encrypted note
+    });
+
     return createdSecretNote;
-
-     
-//   // private readonly iv = crypto.randomBytes(16);  // 16 bytes for the The initialization vector (IV)
-//   // private readonly encryptionKey = crypto.randomBytes(32); // 256-bit key (32 bytes)
-
-//   async create(@Body() createSecretNoteDto: CreateSecretNoteDto) {
-    
-//     // const { note, id } = createSecretNoteDto;
-
-//     // // Encrypt the note
-//     // const encryptedNote = this.encryptionService.encrypt(note);
-
-//     // // Create a new secret note object
-//     // const createdNote = new this.secretNoteModel({
-//     //   _id: id ?? undefined, // If id is provided, use it; otherwise let MongoDB auto-generate
-//     //   encryptedNote,
-//     //   createdAt: new Date(),
-//     // });
-
-//     // return await createdNote.save(); // Save to MongoDB
-//     return `This action returns all secretNotes`;
-//   }
   }
 
-  async findAll(): Promise<SecretNote[]> {
-    return this.secretNoteModel.find().exec();
+  async getAll(): Promise<{ id: string; creationDate: Date }[]> {
+    const notes = await this.secretNoteModel.find().exec();
+    return notes.map(note => ({
+      id: note.id,
+      creationDate: note.creationDate,
+    }));
   }
 
-  async findOne(id: string): Promise<SecretNote> {
-    return this.secretNoteModel.findOne({ _id: id }).exec();
+  // Method to retrieve a single note by ID and return the encrypted note
+  async getEncryptedNoteById(id: string): Promise<{ id: string; note: string; creationDate: Date }> {
+    const note = await this.secretNoteModel.findById(id).exec();
+
+    // If the note is not found, throw a NotFoundException
+    if (!note) {
+      throw new NotFoundException(`Note with ID ${id} not found`);
+    }
+
+    return {
+      id: note.id,
+      note: note.note, // Return the encrypted note
+      creationDate: note.creationDate, // Return the raw Date object
+    };
   }
-  
+
+  // Method to retrieve a single note by ID and return the decrypted note
+  async getDecryptedNoteById(id: string): Promise<{ id: string; note: string; creationDate: Date }> {
+    const note = await this.secretNoteModel.findById(id).exec();
+
+    // If the note is not found, throw a NotFoundException
+    if (!note) {
+      throw new NotFoundException(`Note with ID ${id} not found`);
+    }
+
+    return {
+      id: note.id,
+      note: this.encryptionService.decrypt(note.note), // Decrypt the note before returning
+      creationDate: note.creationDate, // Return the raw Date object
+    };
+  }
+
   async update(id: string, updateSecretNoteDto: UpdateSecretNoteDto): Promise<SecretNote> {
     const updatedSecretNote = await this.secretNoteModel.findByIdAndUpdate(
-      id, 
-      updateSecretNoteDto, 
+      id,
+      updateSecretNoteDto,
       { new: true } // This option returns the modified document
     ).exec();
     return updatedSecretNote;

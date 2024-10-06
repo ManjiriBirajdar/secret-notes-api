@@ -14,13 +14,18 @@ export class SecretNotesController {
   }
 
   @Get()
-  findAll() {
-    return this.secretNotesService.findAll();
+  getAll() {
+    return this.secretNotesService.getAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string): Promise<SecretNote> {
-    return this.secretNotesService.findOne(id);
+  @Get('encrypted/:id')
+  getEncryptedNoteById(@Param('id') id: string): Promise<SecretNote> {
+    return this.secretNotesService.getEncryptedNoteById(id);
+  }
+
+  @Get('decrypted/:id')
+  getDecryptedNoteById(@Param('id') id: string): Promise<SecretNote> {
+    return this.secretNotesService.getDecryptedNoteById(id);
   }
 
   @Patch(':id')
