@@ -67,6 +67,14 @@ export class SecretNotesService {
   }
 
   async update(id: string, updateSecretNoteDto: UpdateSecretNoteDto): Promise<SecretNote> {
+    const note :string = updateSecretNoteDto.note;
+
+    // Encrypt the note again
+    if (note) {
+      const encryptedNote = this.encryptionService.encrypt(note);
+      updateSecretNoteDto.note = encryptedNote; // Overwrite the note with the encrypted value
+    }
+
     const updatedSecretNote = await this.secretNoteModel.findByIdAndUpdate(
       id,
       updateSecretNoteDto,
