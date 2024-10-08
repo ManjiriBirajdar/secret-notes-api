@@ -41,7 +41,7 @@ jobs:
       #   run:  docker build -t secret-notes-api .  
       
       - name: Install Docker Compose    #  run Docker Compose
-        run: sudo brew install docker-compose -y
+        run: sudo apt-get install docker-compose -y
 
       - name: Run Docker Compose
         run: docker-compose up -d
