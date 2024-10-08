@@ -1,0 +1,48 @@
+name: Secret-Notes-API workflow
+
+on: # events that this workflow is triggered on
+  push:
+    branches:
+      - dev  # Trigger on pushes to the dev branch
+  pull_request:
+    branches:
+      - dev
+  workflow_dispatch: # Enables a button to click in UI to run workflow
+
+jobs:
+  build:
+    runs-on: ubuntu-latest  # Use the latest Ubuntu runner
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4  # Check out the code from the repository
+
+      - name: Set up Node.js environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'  # Use Node.js version 18
+
+      - name: Install pnpm
+        run: npm install -g pnpm  # Install pnpm globally
+
+      - name: Install dependencies
+        run: pnpm install  # Install dependencies using pnpm
+
+      # - name: Lint code 
+      #   run: pnpm lint  # Run lint
+
+      - name: Build application
+        run: pnpm run build  # Build the NestJS application
+
+      # - name: Run tests
+      #   run: pnpm test   # Run tests
+
+      # - name: Build Docker image
+      #   run:  docker build -t secret-notes-api .  
+      
+      - name: Install Docker Compose    #  run Docker Compose
+        run: sudo brew install docker-compose -y
+
+      - name: Run Docker Compose
+        run: docker-compose up -d
+
