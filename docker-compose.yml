@@ -1,16 +1,16 @@
 version: '3.8'
 
 services:
-  app:
-    build:
-      context: .  # The current directory as the build context
-      dockerfile: Dockerfile
-    ports:
-      - "3000:3000"  # Map the host port 3000 to container port 3000
-    depends_on:
-      - mongo  # Wait for the mongo service to be ready
-    environment:
-      - MONGODB_URI=mongodb://mongo:27017/secretnotes  # Connection URI to the MongoDB service
+  # app:
+  #   build:
+  #     context: .  # The current directory as the build context
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "3000:3000"  # Map the host port 3000 to container port 3000
+  #   depends_on:
+  #     - mongo  # Wait for the mongo service to be ready
+  #   environment:
+  #     - MONGODB_URI=mongodb://mongo:27017/secretnotes  # Connection URI to the MongoDB service
   
   mongo:
     image: mongo:latest  # Use the official MongoDB image

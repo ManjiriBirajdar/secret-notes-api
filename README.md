@@ -3,19 +3,8 @@
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
-## Installation
 
-```bash
-$ pnpm install
-```
-## Mongoose setup
-
-### Running
-
-This example requires docker or a local mongodb installation.  If using a local mongodb, see `app.module.ts` for connection options, 
-and make sure there are matching options for the mongodb installation and the source code.
-
-#### Docker
+## Using Docker-Compose
 
 There is a `docker-compose.yml` file for starting Docker.
 
@@ -26,9 +15,13 @@ After running the sample, you can stop the Docker container with
 `docker-compose down`
 
 
-## Compile and run the project
+## Local Deployment : Compile and run the project
 
 ```bash
+
+#installation
+$ pnpm install
+
 # development
 $ pnpm run start
 
@@ -56,7 +49,8 @@ $ pnpm run test:cov
 
 Check out a few resources that may come in handy when working with NestJS:
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
+- [NestJS Documentation](https://docs.nestjs.com)
+- [GitHub Actions](https://docs.github.com/en/actions/use-cases-and-examples/publishing-packages/publishing-nodejs-packages)
 
 
 ## License

@@ -9,32 +9,32 @@ export class SecretNotesController {
   constructor(private readonly secretNotesService: SecretNotesService) {}
 
   @Post()
-  create(@Body() createSecretNoteDto: CreateSecretNoteDto) {
+  public async create(@Body() createSecretNoteDto: CreateSecretNoteDto): Promise<{status: string, message : string }>{
     return this.secretNotesService.create(createSecretNoteDto);
   }
 
   @Get()
-  getAll() {
+  public async getAll() {
     return this.secretNotesService.getAll();
   }
 
   @Get('encrypted/:id')
-  getEncryptedNoteById(@Param('id') id: string): Promise<SecretNote> {
+  public async getEncryptedNoteById(@Param('id') id: string): Promise<{ id: string; encryptedNote : SecretNote}> {
     return this.secretNotesService.getEncryptedNoteById(id);
   }
 
   @Get('decrypted/:id')
-  getDecryptedNoteById(@Param('id') id: string): Promise<SecretNote> {
+  public async getDecryptedNoteById(@Param('id') id: string): Promise<{ id: string; secretNote : SecretNote}> {
     return this.secretNotesService.getDecryptedNoteById(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateSecretNoteDto: UpdateSecretNoteDto) {
+  public async update(@Param('id') id: string, @Body() updateSecretNoteDto: UpdateSecretNoteDto) {
     return this.secretNotesService.update(id, updateSecretNoteDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  public async delete(@Param('id') id: string) {
     return this.secretNotesService.delete(id);
   }
 }

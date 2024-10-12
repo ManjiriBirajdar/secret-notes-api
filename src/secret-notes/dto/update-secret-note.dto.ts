@@ -10,4 +10,6 @@ export class UpdateSecretNoteDto {
   @IsNotEmpty()
   note?: string;
 
+  @IsNotEmpty()
+  updatedAt: Date;
 }

@@ -1,5 +1,4 @@
 import { IsString, IsNotEmpty } from 'class-validator';
-import { isDate } from 'validator';
 
 export class CreateSecretNoteDto {
   

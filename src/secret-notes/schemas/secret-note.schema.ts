@@ -8,8 +8,11 @@ export class SecretNote {
   @Prop({ required: true })
   note: string;
 
-  @Prop({ required: true })
+  @Prop({ default: Date.now() })
   creationDate: Date;
+
+  @Prop({ default: Date.now() })
+  updatedAt: Date;
 }
 
 export const SecretNoteSchema = SchemaFactory.createForClass(SecretNote);

@@ -12,5 +12,6 @@ import { EncryptionModule } from 'src/encryption/encryption.module';
   ],
   providers: [SecretNotesService],
   controllers: [SecretNotesController], 
+  exports: [SecretNotesService],
 })
 export class SecretNotesModule {}
