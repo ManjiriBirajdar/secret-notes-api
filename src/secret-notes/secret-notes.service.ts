@@ -4,7 +4,7 @@ import { Model } from 'mongoose';
 import { CreateSecretNoteDto } from './dto/create-secret-note.dto';
 import { SecretNote } from './schemas/secret-note.schema';
 import { UpdateSecretNoteDto } from './dto/update-secret-note.dto';
-import { EncryptionService } from 'src/encryption/encryption.service';
+import { EncryptionService } from '../encryption/encryption.service';
 
 @Injectable()
 export class SecretNotesService {
@@ -144,7 +144,7 @@ export class SecretNotesService {
   }
 
    // Method to delete a single note
-  async delete(id: string) {
+  async delete(id: string) : Promise<string>{
     try {
       const deletedSecretNote = await this.secretNoteModel
         .findByIdAndDelete({ _id: id })
