@@ -7,12 +7,12 @@ export class EncryptionController {
   constructor(private readonly encryptionService: EncryptionService) {}
 
   @Post('encrypt')
-  encrypt(@Body('note') note: string): string {
+  encrypt(@Body('note') note: string) : Promise<string> {
     return this.encryptionService.encrypt(note);
   }
 
   @Post('decrypt')
-  decrypt(@Body('note') encryptedNote: string): string {
+  decrypt(@Body('note') encryptedNote: string): Promise<string> {
     return this.encryptionService.decrypt(encryptedNote);
   }
 }

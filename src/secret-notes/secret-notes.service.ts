@@ -22,7 +22,7 @@ export class SecretNotesService {
       // Create a new SecretNote document with the encrypted note
       const createdSecretNote = await this.secretNoteModel.create({
         ...createSecretNoteDto,
-        note: encryptedNote, // Store the encrypted note
+        note: (await encryptedNote).toString(), // Store the encrypted note
         creationDate: new Date(),
         updatedAt: null
       });
@@ -98,7 +98,7 @@ export class SecretNotesService {
 
       // Construct the secretNote object
       const secretNote: SecretNote = {
-        note: decryptedNote,           // Decrypted note content
+        note: (await decryptedNote).toString(),           // Decrypted note content
         creationDate: note.creationDate,
         updatedAt: note.updatedAt
       };
@@ -126,7 +126,7 @@ export class SecretNotesService {
 
       // Encrypt the note again and Overwrite the note with the encrypted value
       const encryptedNote = this.encryptionService.encrypt(note);
-      updateSecretNoteDto.note = encryptedNote; 
+      updateSecretNoteDto.note = (await encryptedNote).toString(); 
 
       // Update the updatedAt field to the current date
       updateSecretNoteDto.updatedAt = new Date();
