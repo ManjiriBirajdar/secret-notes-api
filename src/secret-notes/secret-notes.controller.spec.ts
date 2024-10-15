@@ -4,8 +4,7 @@ import { SecretNotesService } from './secret-notes.service';
 import { EncryptionService } from '../encryption/encryption.service';
 import { getModelToken } from '@nestjs/mongoose';
 import { SecretNote } from './schemas/secret-note.schema';
-import { CreateSecretNoteDto } from 'src/secret-notes/dto/create-secret-note.dto';
-import { UpdateSecretNoteDto } from 'src/secret-notes/dto/update-secret-note.dto';
+import { SecretNoteDto } from './dto/secret-note.dto';
 
 describe('SecretNotesController', () => {
   let controller: SecretNotesController;
@@ -34,16 +33,11 @@ describe('SecretNotesController', () => {
 
   describe('create', () => {
     it('should create a secret note', async () => {
-      const createDto: CreateSecretNoteDto = {
-        id: '1',
-        note: 'Test note',
-        creationDate: new Date(),
-        updatedAt: null
-      };
+      const note = "note 1"
       const result = { status: 'Accepted', message: 'Secret Note created successfully with Id 1' };
       jest.spyOn(secretNotesService, 'create').mockResolvedValue(result);
 
-      expect(await controller.create(createDto)).toBe(result);
+      expect(await controller.create(note)).toBe(result);
     });
   });
 

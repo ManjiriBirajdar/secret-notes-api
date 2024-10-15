@@ -1,16 +1,15 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { SecretNotesService } from './secret-notes.service';
-import { CreateSecretNoteDto } from './dto/create-secret-note.dto';
-import { UpdateSecretNoteDto } from './dto/update-secret-note.dto';
 import { SecretNote } from './schemas/secret-note.schema';
+import { SecretNoteDto } from './dto/secret-note.dto';
 
 @Controller('secret-notes')
 export class SecretNotesController {
   constructor(private readonly secretNotesService: SecretNotesService) {}
 
   @Post()
-  public async create(@Body() createSecretNoteDto: CreateSecretNoteDto): Promise<{status: string, message : string }>{
-    return this.secretNotesService.create(createSecretNoteDto);
+  public async create(@Body('note') note: string): Promise<{status: string, message : string }>{
+    return this.secretNotesService.create(note);
   }
 
   @Get()
@@ -24,7 +23,7 @@ export class SecretNotesController {
   }
 
   @Get('decrypted/:id')
-  public async getDecryptedNoteById(@Param('id') id: string): Promise<CreateSecretNoteDto> {
+  public async getDecryptedNoteById(@Param('id') id: string): Promise<SecretNoteDto> {
     return this.secretNotesService.getDecryptedNoteById(id);
   }
 

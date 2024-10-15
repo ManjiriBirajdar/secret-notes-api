@@ -1,11 +1,10 @@
 import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { CreateSecretNoteDto } from './dto/create-secret-note.dto';
 import { SecretNote } from './schemas/secret-note.schema';
-import { UpdateSecretNoteDto } from './dto/update-secret-note.dto';
 import { EncryptionService } from '../encryption/encryption.service';
 import { CryptoDto } from 'src/encryption/dto/crypto.dto';
+import { SecretNoteDto } from './dto/secret-note.dto';
 
 @Injectable()
 export class SecretNotesService {
@@ -14,15 +13,16 @@ export class SecretNotesService {
     private readonly encryptionService: EncryptionService // Dependency Injecttion : EncryptionService
   ) { }
 
-  async create(createSecretNoteDto: CreateSecretNoteDto): Promise<{ status: string, message : string }> {
-
+  /**
+   * create an encrypted note
+   */
+  async create(note: string): Promise<{ status: string, message : string }> {
     try {
       // Encrypt the note before saving it
-      const encryptedNote = await this.encryptionService.encrypt(createSecretNoteDto.note);
+      const encryptedNote = await this.encryptionService.encrypt(note);
 
       // Create a new SecretNote document with the encrypted note
       const createdSecretNote = await this.secretNoteModel.create({
-        ...createSecretNoteDto,
         note: encryptedNote, // Store the encrypted note
         creationDate: new Date(),
         updatedAt: null
@@ -35,6 +35,9 @@ export class SecretNotesService {
     }
   }
 
+  /**
+   * Get all the encrypted notes
+   */
   async getAll(): Promise<SecretNote[]> {
     try {
       const notes = await this.secretNoteModel.find().exec();
@@ -47,10 +50,6 @@ export class SecretNotesService {
 
   /**
    * Retrieves a single encrypted note by ID
-   * @param {string} id - The ID of the note to retrieve
-   * @returns {Promise<SecretNote>} The encrypted note
-   * @throws {NotFoundException} If the note is not found
-   * @throws {HttpException} If there's an error retrieving the note
    */
   async getEncryptedNoteById(id: string): Promise<{ id: string; encryptedNote: SecretNote }> {
     try {
@@ -83,8 +82,10 @@ export class SecretNotesService {
     }
   }
 
-  // Method to retrieve a single note by ID and return the decrypted note
-  async getDecryptedNoteById(id: string): Promise<CreateSecretNoteDto> {
+  /**
+   *  Get a single decrypted note by ID
+   */
+  async getDecryptedNoteById(id: string): Promise<SecretNoteDto> {
 
     try {
       const note = await this.secretNoteModel.findById(id).lean().exec();
@@ -99,37 +100,39 @@ export class SecretNotesService {
       const decryptedNote = await this.encryptionService.decrypt(encryptedNote);
 
       // Construct the secretNote object
-      const createSecretNote: CreateSecretNoteDto = {
-        note: decryptedNote, // Decrypted note content
+      const secretNote: SecretNoteDto = {
+        note: {
+          note: decryptedNote,
+          iv: note.note.iv,
+          tag: note.note.tag
+        }, 
         creationDate: note.creationDate,
         updatedAt: note.updatedAt,
         id: id
       };
-
-      return createSecretNote;
+      return secretNote;
     } catch (error) {
       console.log(error);
       throw new Error('Error: get Decrypted Note By Id failed!')
     }
   }
 
-  // Method to update a single note
+   /**
+   * Update a single note by ID
+   */
   async update(id: string, note: string): Promise<SecretNote> {
     try {
-
-      // Encrypt the note again and Overwrite the note with the encrypted value
-      // const secretNote = JSON.stringify(note);
       const encryptedNote = await this.encryptionService.encrypt(note);
 
-      const updateSecretNoteDto: UpdateSecretNoteDto = {
+      const secretNote: SecretNoteDto = {
         id: id,
         note: encryptedNote,
-        updatedAt: new Date(),
+        updatedAt: new Date()
       }
 
       const updatedSecretNote = await this.secretNoteModel.findByIdAndUpdate(
         id,
-        updateSecretNoteDto,
+        secretNote,
         { new: true } // This option returns the modified document
       ).exec();
       return updatedSecretNote;
@@ -139,7 +142,9 @@ export class SecretNotesService {
     }
   }
 
-   // Method to delete a single note
+  /**
+   * Delete a single note by ID
+   */
   async delete(id: string) : Promise<string>{
     try {
       const deletedSecretNote = await this.secretNoteModel

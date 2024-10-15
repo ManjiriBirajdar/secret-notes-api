@@ -23,7 +23,6 @@ import { CryptoDto } from './dto/crypto.dto';
 export class EncryptionService {
 
   private readonly algorithm = 'aes-256-gcm';
-  private readonly password = "strongpassword";
   private readonly key = randomBytes(32).toString('base64');
 
    // Encrypt function
