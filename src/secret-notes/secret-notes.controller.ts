@@ -24,13 +24,13 @@ export class SecretNotesController {
   }
 
   @Get('decrypted/:id')
-  public async getDecryptedNoteById(@Param('id') id: string): Promise<{ id: string; secretNote : SecretNote}> {
+  public async getDecryptedNoteById(@Param('id') id: string): Promise<CreateSecretNoteDto> {
     return this.secretNotesService.getDecryptedNoteById(id);
   }
 
   @Patch(':id')
-  public async update(@Param('id') id: string, @Body() updateSecretNoteDto: UpdateSecretNoteDto) {
-    return this.secretNotesService.update(id, updateSecretNoteDto);
+  public async update(@Param('id') id: string, @Body('note') note: string): Promise<SecretNote>{
+    return this.secretNotesService.update(id, note);
   }
 
   @Delete(':id')

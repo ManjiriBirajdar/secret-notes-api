@@ -12,4 +12,6 @@ export class CreateSecretNoteDto {
 
   @IsNotEmpty()
   creationDate: Date;
+
+  updatedAt: Date;
 }

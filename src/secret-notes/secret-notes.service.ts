@@ -5,6 +5,7 @@ import { CreateSecretNoteDto } from './dto/create-secret-note.dto';
 import { SecretNote } from './schemas/secret-note.schema';
 import { UpdateSecretNoteDto } from './dto/update-secret-note.dto';
 import { EncryptionService } from '../encryption/encryption.service';
+import { CryptoDto } from 'src/encryption/dto/crypto.dto';
 
 @Injectable()
 export class SecretNotesService {
@@ -17,12 +18,12 @@ export class SecretNotesService {
 
     try {
       // Encrypt the note before saving it
-      const encryptedNote = this.encryptionService.encrypt(createSecretNoteDto.note);
+      const encryptedNote = await this.encryptionService.encrypt(createSecretNoteDto.note);
 
       // Create a new SecretNote document with the encrypted note
       const createdSecretNote = await this.secretNoteModel.create({
         ...createSecretNoteDto,
-        note: (await encryptedNote).toString(), // Store the encrypted note
+        note: encryptedNote, // Store the encrypted note
         creationDate: new Date(),
         updatedAt: null
       });
@@ -59,7 +60,7 @@ export class SecretNotesService {
       }
       // Construct the secretNote object
       const encryptedNote: SecretNote = {
-        note: note.note,           // Decrypted note content
+        note: note.note,
         creationDate: note.creationDate,
         updatedAt: note.updatedAt
       };
@@ -83,31 +84,29 @@ export class SecretNotesService {
   }
 
   // Method to retrieve a single note by ID and return the decrypted note
-  async getDecryptedNoteById(id: string): Promise<{ id: string; secretNote: SecretNote }> {
+  async getDecryptedNoteById(id: string): Promise<CreateSecretNoteDto> {
 
     try {
-      const note = await this.secretNoteModel.findById(id).exec();
-
-      // If the note is not found, throw a NotFoundException
-      if (!note) {
-        throw new NotFoundException(`Note with ID ${id} not found`);
-      }
+      const note = await this.secretNoteModel.findById(id).lean().exec();
+      
+      const encryptedNote : CryptoDto = { 
+        note : note.note.note,
+        iv: note.note.iv,
+        tag: note.note.tag,
+      };
 
       // Decrypt the note before returning
-      const decryptedNote = this.encryptionService.decrypt(note.note);
+      const decryptedNote = await this.encryptionService.decrypt(encryptedNote);
 
       // Construct the secretNote object
-      const secretNote: SecretNote = {
-        note: (await decryptedNote).toString(),           // Decrypted note content
+      const createSecretNote: CreateSecretNoteDto = {
+        note: decryptedNote, // Decrypted note content
         creationDate: note.creationDate,
-        updatedAt: note.updatedAt
+        updatedAt: note.updatedAt,
+        id: id
       };
 
-      // Return the note ID and the secretNote object
-      return {
-        id: note.id,                  // Return the note ID
-        secretNote                    // Return the decrypted note data with creationDate and updatedAt
-      };
+      return createSecretNote;
     } catch (error) {
       console.log(error);
       throw new Error('Error: get Decrypted Note By Id failed!')
@@ -115,21 +114,18 @@ export class SecretNotesService {
   }
 
   // Method to update a single note
-  async update(id: string, updateSecretNoteDto: UpdateSecretNoteDto): Promise<SecretNote> {
+  async update(id: string, note: string): Promise<SecretNote> {
     try {
-      const note: string = updateSecretNoteDto.note;
-
-      // Validate note presence and content
-      if (!note.trim()) {
-        throw new Error("Note cannot be empty."); // You can replace this with a more appropriate error handling approach
-      }
 
       // Encrypt the note again and Overwrite the note with the encrypted value
-      const encryptedNote = this.encryptionService.encrypt(note);
-      updateSecretNoteDto.note = (await encryptedNote).toString(); 
+      // const secretNote = JSON.stringify(note);
+      const encryptedNote = await this.encryptionService.encrypt(note);
 
-      // Update the updatedAt field to the current date
-      updateSecretNoteDto.updatedAt = new Date();
+      const updateSecretNoteDto: UpdateSecretNoteDto = {
+        id: id,
+        note: encryptedNote,
+        updatedAt: new Date(),
+      }
 
       const updatedSecretNote = await this.secretNoteModel.findByIdAndUpdate(
         id,

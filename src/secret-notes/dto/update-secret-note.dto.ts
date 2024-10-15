@@ -1,4 +1,5 @@
 import { IsNotEmpty, IsString } from 'class-validator';
+import { CryptoDto } from 'src/encryption/dto/crypto.dto';
 
 export class UpdateSecretNoteDto {
   
@@ -8,7 +9,7 @@ export class UpdateSecretNoteDto {
 
   @IsString()
   @IsNotEmpty()
-  note?: string;
+  note: CryptoDto;
 
   @IsNotEmpty()
   updatedAt: Date;
