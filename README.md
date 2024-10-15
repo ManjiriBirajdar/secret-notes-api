@@ -49,7 +49,12 @@ $ pnpm run test:cov
 
 Check out a few resources that may come in handy when working with NestJS:
 
-- [NestJS Documentation](https://docs.nestjs.com)
+- [NestJS Documentation : General](https://docs.nestjs.com)
+- [NodeJS Documentation : Encryption](https://docs.nestjs.com/security/encryption-and-hashing)
+- [NodeJS Documentation : CRUD Generator](https://docs.nestjs.com/recipes/crud-generator)
+- [NodeJS Documentation : Crypto library](https://nodejs.org/api/crypto.html)
+- [Selecting Encyption Mode](https://isuruka.medium.com/selecting-the-best-aes-block-cipher-mode-aes-gcm-vs-aes-cbc-ee3ebae173c)
+- [AES Encryption](https://nordlayer.com/blog/aes-encryption/)
 - [GitHub Actions](https://docs.github.com/en/actions/use-cases-and-examples/publishing-packages/publishing-nodejs-packages)
 
 
