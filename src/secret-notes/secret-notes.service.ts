@@ -63,17 +63,14 @@ export class SecretNotesService {
         creationDate: note.creationDate,
         updatedAt: note.updatedAt
       };
-
-      // Return the note ID and the secretNote object
       return {
-        id: id,                         // Return the note ID
-        encryptedNote                    // Return the decrypted note data with creationDate and updatedAt
+        id: id,                         
+        encryptedNote
       };
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw error;
       }
-
       throw new HttpException(
         'Failed to retrieve encrypted note',
         HttpStatus.NOT_FOUND,
@@ -89,7 +86,9 @@ export class SecretNotesService {
 
     try {
       const note = await this.secretNoteModel.findById(id).lean().exec();
-      
+      if (!note) {
+        throw new NotFoundException(`Note with ID ${id} not found`);
+      }
       const encryptedNote : CryptoDto = { 
         note : note.note.note,
         iv: note.note.iv,
@@ -112,8 +111,14 @@ export class SecretNotesService {
       };
       return secretNote;
     } catch (error) {
-      console.log(error);
-      throw new Error('Error: get Decrypted Note By Id failed!')
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      throw new HttpException(
+        'Failed to retrieve decrypted note',
+        HttpStatus.NOT_FOUND,
+        { cause: error }
+      );
     }
   }
 
@@ -135,10 +140,20 @@ export class SecretNotesService {
         secretNote,
         { new: true } // This option returns the modified document
       ).exec();
-      return updatedSecretNote;
+     
+      if(updatedSecretNote!= null)
+        return updatedSecretNote;
+      else
+        throw new NotFoundException(`Note with ID ${id} not found`);
     } catch (error) {
-      console.log(error);
-      throw new Error('Error: updating (patching) secret note failed!')
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      throw new HttpException(
+        'Error: updating (patching) secret note failed!',
+        HttpStatus.NOT_FOUND,
+        { cause: error }
+      );
     }
   }
 

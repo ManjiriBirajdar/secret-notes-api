@@ -55,7 +55,7 @@ Check out a few resources that may come in handy when working with NestJS:
 - [NodeJS Documentation : Crypto library](https://nodejs.org/api/crypto.html)
 - [Selecting Encyption Mode](https://isuruka.medium.com/selecting-the-best-aes-block-cipher-mode-aes-gcm-vs-aes-cbc-ee3ebae173c)
 - [AES Encryption](https://nordlayer.com/blog/aes-encryption/)
-- [GitHub Actions](https://docs.github.com/en/actions/use-cases-and-examples/publishing-packages/publishing-nodejs-packages)
+- [GitHub Actions](https://docs.github.com/en/actions/about-github-actions/understanding-github-actions)
 
 
 ## License
