@@ -1,7 +1,7 @@
 
 # Description
 
-API which supports a common CRUD pattern to encrypt and decrypt notes
+REST API which supports a CRUD operations to encrypt and decrypt notes
 
 Tech stack:
 
@@ -15,11 +15,11 @@ Tech stack:
 
 5. Encryption type : aes-256-gcm
 
-6. Application is packaged in docker and can be deployed using docker-compose
+6. Application is packaged inside docker and can be deployed using docker-compose
 
 7. Sample GitHub Actions
 
-8. E2E Testing using Postman API platform
+8. E2E Testing using [Postman API platform](https://learning.postman.com/docs/getting-started/installation/installation-and-updates/)
 
 # Using Docker-Compose
 
@@ -33,12 +33,12 @@ After running the sample, you can stop the Docker container with
 
 ## E2E Testing using postman api platform
 
-Import "secret-notes-api/test/SecretNote REST API - CRUD.postman_collection.json" in postman
+Import "/secret-notes-api/test/SecretNotes-postman-collection.json" in [postman](https://www.postman.com/)
 
 Refer [Published documentation](https://documenter.getpostman.com/view/24107635/2sAXxV59ZP)
 
 
-# Local Deployment : Compile and run the project
+# Local Deployment
 
 ## Install Dependencies
 
