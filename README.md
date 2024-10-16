@@ -14,6 +14,12 @@ After running the sample, you can stop the Docker container with
 
 `docker-compose down`
 
+## E2E Testing using postman api platform
+
+Import "secret-notes-api/test/SecretNote REST API - CRUD.postman_collection.json" in postman
+
+Refer [Published documentation](https://documenter.getpostman.com/view/24107635/2sAXxV59ZP)
+
 
 ## Local Deployment : Compile and run the project
 
