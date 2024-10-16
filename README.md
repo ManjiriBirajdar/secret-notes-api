@@ -1,10 +1,27 @@
 
 # Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+API which supports a common CRUD pattern to encrypt and decrypt notes
 
+Tech stack:
 
-## Using Docker-Compose
+1. TypeScript
+
+2. NestJS
+
+3. MongoDB
+
+4. Jest Testing Framework (in progress)
+
+5. Encryption type : aes-256-gcm
+
+6. Application is packaged in docker and can be deployed using docker-compose
+
+7. Sample GitHub Actions
+
+8. E2E Testing using Postman API platform
+
+# Using Docker-Compose
 
 There is a `docker-compose.yml` file for starting Docker.
 
@@ -21,7 +38,7 @@ Import "secret-notes-api/test/SecretNote REST API - CRUD.postman_collection.json
 Refer [Published documentation](https://documenter.getpostman.com/view/24107635/2sAXxV59ZP)
 
 
-## Local Deployment : Compile and run the project
+# Local Deployment : Compile and run the project
 
 ```bash
 
