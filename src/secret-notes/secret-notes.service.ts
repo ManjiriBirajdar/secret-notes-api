@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { SecretNote } from './schemas/secret-note.schema';
 import { EncryptionService } from '../encryption/encryption.service';
-import { CryptoDto } from 'src/encryption/dto/crypto.dto';
+import { CryptoDto } from '../encryption/dto/crypto.dto';
 import { SecretNoteDto } from './dto/secret-note.dto';
 
 @Injectable()

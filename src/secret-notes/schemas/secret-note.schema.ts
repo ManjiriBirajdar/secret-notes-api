@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
-import { CryptoDto } from 'src/encryption/dto/crypto.dto';
+import { CryptoDto } from '../../encryption/dto/crypto.dto';
 
 export type SecretNoteDocument = HydratedDocument<SecretNote>;
 

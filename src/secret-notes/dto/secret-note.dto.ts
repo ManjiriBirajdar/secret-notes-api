@@ -1,5 +1,5 @@
 import { IsString, IsNotEmpty } from 'class-validator';
-import { CryptoDto } from 'src/encryption/dto/crypto.dto';
+import { CryptoDto } from '../../encryption/dto/crypto.dto';
 
 export class SecretNoteDto {
   
