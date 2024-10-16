@@ -40,16 +40,31 @@ Refer [Published documentation](https://documenter.getpostman.com/view/24107635/
 
 # Local Deployment : Compile and run the project
 
-```bash
+## Install Dependencies
 
+```bash
 #installation
 $ pnpm install
+```
 
+## Setup mongodb locally in docker
+
+Go to app.module.ts and update 'mongo' to 'localhost'
+
+```bash
+MongooseModule.forRoot('mongodb://localhost:27017/secretnote'),
+
+#start mongodb 
+docker-compose up
+```
+
+## Run application
+```bash
 # development
-$ pnpm run start
+$ pnpm run start  OR nest start
 
 # watch mode
-$ pnpm run start:dev
+$ pnpm run start:dev OR nest start --watch
 
 # production mode
 $ pnpm run start:prod
@@ -57,15 +72,11 @@ $ pnpm run start:prod
 
 ## Run tests
 
+Using Jest (in progress)
+
 ```bash
 # unit tests
-$ pnpm run test
-
-# e2e tests
-$ pnpm run test:e2e
-
-# test coverage
-$ pnpm run test:cov
+$ jest 
 ```
 
 ## Resources
@@ -83,4 +94,4 @@ Check out a few resources that may come in handy when working with NestJS:
 
 ## License
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+[MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
